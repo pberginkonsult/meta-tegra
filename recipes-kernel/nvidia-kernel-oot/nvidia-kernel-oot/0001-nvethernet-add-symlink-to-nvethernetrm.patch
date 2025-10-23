@@ -1,0 +1,24 @@
+From 30496a34c3fdb9e00f9c9c8ae6050cb09e38675f Mon Sep 17 00:00:00 2001
+From: Matt Madison <matt@madison.systems>
+Date: Sun, 12 Jan 2025 06:48:07 -0800
+Subject: [PATCH] nvethernet: add symlink to nvethernetrm
+
+Upstream-Status: Backport [https://github.com/OE4T/linux-nv-oot/commit/95230805dc87f9749b2bbe245cebeda0339e5f1e]
+
+Signed-off-by: Matt Madison <matt@madison.systems>
+---
+ drivers/net/ethernet/nvidia/nvethernet/nvethernetrm | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 120000 drivers/net/ethernet/nvidia/nvethernet/nvethernetrm
+
+diff --git a/drivers/net/ethernet/nvidia/nvethernet/nvethernetrm b/drivers/net/ethernet/nvidia/nvethernet/nvethernetrm
+new file mode 120000
+index 00000000..8f37fb94
+--- /dev/null
++++ b/drivers/net/ethernet/nvidia/nvethernet/nvethernetrm
+@@ -0,0 +1 @@
++../../../../../../nvethernetrm
+\ No newline at end of file
+--
+2.43.0
+

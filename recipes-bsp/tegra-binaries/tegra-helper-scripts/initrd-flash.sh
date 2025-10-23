@@ -15,6 +15,7 @@ Usage:
 
 Options:
   -h|--help             Displays this usage information
+  --verbose             Additional verbose output
   --external-only       Write only the external storage device
   -k|--partition NAME   Write only the specified partition
   --qspi-only           Write only the QSPI flash (boot firmware)
@@ -46,6 +47,7 @@ if [ -e .presigning-vars ]; then
     PRESIGNED=yes
 fi
 
+verbose=
 usb_instance=
 instance_args=
 keyfile=
@@ -56,7 +58,7 @@ partition_name=
 early_final_status=0
 check_usb_instance="${TEGRAFLASH_CHECK_USB_INSTANCE:-no}"
 
-ARGS=$(getopt -n $(basename "$0") -l "usb-instance:,help,skip-bootloader,external-only,qspi-only,partition" -o "u:v:k:h" -- "$@")
+ARGS=$(getopt -n $(basename "$0") -l "usb-instance:,help,skip-bootloader,external-only,qspi-only,partition,verbose" -o "u:v:k:h" -- "$@")
 if [ $? -ne 0 ]; then
     usage >&2
     exit 1
@@ -101,6 +103,10 @@ while true; do
                 echo "ERR: specify only one of --external-only, --qspi-only, --partition" >&2
                 exit 1
             fi
+            ;;
+        --verbose)
+            verbose=1
+            shift
             ;;
         -h|--help)
             usage
@@ -315,10 +321,11 @@ mkdir -p out/flash_workspace/flash-images out/flash_workspace/rcm-boot
 ./create_l4t_bsp_images.py $convargs --dest $PWD/out/flash_workspace/flash-images
 ./create_l4t_bsp_images.py $convargs --dest $PWD/out/flash_workspace/rcm-boot --rcm-boot
 cp -R out/flash_workspace/rcm-boot out/flash_workspace/rcm-flash
+VERBOSE_FLAG=$([ "$verbose" -eq 1 ] && echo "-D")
 cat > out/doflash.sh <<EOF
 here=\$(readlink -f \$(dirname "\$0"))
 oldwd="\$PWD"
-"\$here/tools/flashtools/bootburn/flash_bsp_images.py" -b jetson-t264 --l4t -P "\$here/flash_workspace" $instance_args "\$@"
+"\$here/tools/flashtools/bootburn/flash_bsp_images.py" -b jetson-t264 --l4t $VERBOSE_FLAG -P "\$here/flash_workspace" $instance_args "\$@"
 rc=\$?
 cd "\$oldwd"
 exit \$rc

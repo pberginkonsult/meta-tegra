@@ -68,7 +68,7 @@ CUDA_NATIVEDEPS = "cuda-compiler-native cuda-cudart-native"
 CUDA_NATIVEDEPS:class-native = ""
 CUDA_DEPENDS = "cuda-libraries ${CUDA_NATIVEDEPS}"
 
-DEPENDS:append:cuda = " ${CUDA_DEPENDS} ${@'tegra-cmake-overrides' if bb.data.inherits_class('cmake', d) else ''}"
+DEPENDS:append:cuda = " ${CUDA_DEPENDS}"
 PATH:prepend:cuda = "${STAGING_DIR_NATIVE}/usr/local/cuda-${CUDA_VERSION}/bin:"
 
 # The following are for the new-style (CMake 3.8+) CUDA language

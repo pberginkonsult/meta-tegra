@@ -1,0 +1,43 @@
+From 935eca591993a0894c991919b75a3f30fa019838 Mon Sep 17 00:00:00 2001
+From: Peter Bergin <peter@berginkonsult.se>
+Date: Mon, 13 Apr 2026 14:06:35 +0200
+Subject: [PATCH] ASoC: tegra: fix missing I2S codec controls with
+ audio-graph-card2
+
+tegra_machine_add_i2s_codec_controls() searches each runtime DAI link
+for the nvidia,ahub-i2s-id property, which it reads from the CPU-side
+of_node to determine which I2S controller the link belongs to.
+
+With audio-graph-card2 DPCM and component_chaining, XBAR-I2S backend
+links have a dummy CPU DAI whose of_node is NULL. The I2S controller
+appears on the codec side of the link instead. The NULL check on
+cpus->of_node caused the loop to skip every backend link, so no I2S
+codec controls were ever registered.
+
+Fall back to codecs->of_node when the CPU side has no of_node. The
+nvidia,ahub-i2s-id property is present on the I2S controller DT node
+regardless of which side of the link it appears on.
+
+AI-Generated: Uses Claude
+Upstream-Status: Pending
+Signed-off-by: Peter Bergin <peter@berginkonsult.se>
+Signed-off-by: Peter Bergin <peter.bergin@1x.tech>
+---
+ sound/soc/tegra/tegra_asoc_machine.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/sound/soc/tegra/tegra_asoc_machine.c b/sound/soc/tegra/tegra_asoc_machine.c
+index bbdf5e1..950b4dc 100644
+--- a/sound/soc/tegra/tegra_asoc_machine.c
++++ b/sound/soc/tegra/tegra_asoc_machine.c
+@@ -263,6 +263,10 @@ int tegra_machine_add_i2s_codec_controls(struct snd_soc_card *card)
+ 	list_for_each_entry(rtd, &card->rtd_list, list) {
+ 		np = rtd->dai_link->cpus->of_node;
+
++		/* With audio-graph-card2 DPCM the I2S controller is codec-side */
++		if (!np && rtd->dai_link->num_codecs > 0)
++			np = rtd->dai_link->codecs->of_node;
++
+ 		if (!np)
+ 			continue;
+

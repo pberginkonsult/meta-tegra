@@ -26,6 +26,7 @@ COMMON_PATCHES = "\
     file://0010-Fix-pfn_t-references-for-Linux-6.17-compatibility.patch;patchdir=unifiedgpudisp \
     file://0011-Fix-drm-fb-builds-for-Linux-6.17.patch;patchdir=unifiedgpudisp \
     file://0012-tegra264-ufs-provision-update-for-build-reproducibil.patch;patchdir=hardware/nvidia/t264/nv-public \
+    file://0013-ASoC-tegra-fix-missing-I2S-codec-controls-with-audio.patch;patchdir=nvidia-oot \
 "
 
 EXTRA_PATCHES ??= ""
@@ -246,6 +247,7 @@ TEGRA_OOT_ALSA_DRIVERS ?= "\
     ${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-snd-soc-tegra210-afc \
     ${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-snd-soc-tegra210-iqc \
     ${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-snd-soc-tegra-utils \
+    ${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-snd-soc-tegra-controls \
     ${TEGRA_OOT_EXTRA_ALSA_DRIVERS} \
 "
 TEGRA_OOT_ALL_DRIVER_PACKAGES += "${TEGRA_OOT_ALSA_DRIVERS}"
@@ -360,7 +362,6 @@ TEGRA_OOT_OTHER_DRIVERS ?= "\
     ${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-nvdisp-serdes \
     ${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-tegra-hv \
     ${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-snd-soc-tegra210-virt-alt-adsp \
-    ${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-snd-soc-tegra-controls \
     ${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-snd-soc-tegra210-adsp \
     ${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-tegra-hv-comm \
     ${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-max96712-tpg \

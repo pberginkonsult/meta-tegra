@@ -18,14 +18,14 @@ TEGRA_SIGNING_EXTRA_DEPS ??= ""
 do_compile() {
     # Older versions of this recipe use GUID
     if [ -n "${GUID}" ]; then
-        bberror "Please set TEGRA_SYSTEM_IMAGE_GUID to override the image type GUID"
+        bberror "Please set TEGRA_UEFI_SYSTEM_IMAGE_TYPE_GUID to override the image type GUID"
     fi
     if [ ! -e ${DEPLOY_DIR_IMAGE}/${TEGRA_FLASHVAR_UEFI_IMAGE}.fmp-image-type-id ]; then
         bberror "Missing FMP system image type GUID file"
     fi
     this_guid=$(cat ${DEPLOY_DIR_IMAGE}/${TEGRA_FLASHVAR_UEFI_IMAGE}.fmp-image-type-id)
-    if [ -n "${TEGRA_UEFI_SYSTEM_IMAGE_GUID}" -a "$this_guid" != "${TEGRA_UEFI_SYSTEM_IMAGE_GUID}" ]; then
-        bbwarn "TEGRA_UEFI_SYSTEM_IMAGE_GUID variable does not match built configuration"
+    if [ -n "${TEGRA_UEFI_SYSTEM_IMAGE_TYPE_GUID}" -a "$this_guid" != "${TEGRA_UEFI_SYSTEM_IMAGE_TYPE_GUID}" ]; then
+        bbwarn "TEGRA_UEFI_SYSTEM_IMAGE_TYPE_GUID variable does not match built configuration"
     fi
     # Generate BUP images
     PATH="${STAGING_BINDIR_NATIVE}/${FLASHTOOLS_DIR}:${PATH}"
